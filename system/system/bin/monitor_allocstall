@@ -1,0 +1,60 @@
+#!/system/bin/sh
+
+THRESHOLD=50
+INTERVAL=60
+
+last_dma32=0
+last_normal=0
+last_movable=0
+last_nosplit=0
+last_nomerge=0
+current_dma32=0
+current_normal=0
+current_movable=0
+current_nosplit=0
+current_nomerge=0
+
+count=0
+
+while true; do
+    screen_state=$(getprop debug.tracing.screen_state 0)
+    if [ $screen_state -eq 1 ] ; then
+        break
+    fi
+
+    current_dma32=$(grep "allocstall_dma32" /proc/vmstat | awk '{print $2}')
+    current_normal=$(grep "allocstall_normal" /proc/vmstat | awk '{print $2}')
+    current_movable=$(grep "allocstall_movable" /proc/vmstat | awk '{print $2}')
+    current_nosplit=$(grep "allocstall_nosplit" /proc/vmstat | awk '{print $2}')
+    current_nomerge=$(grep "allocstall_nomerge" /proc/vmstat | awk '{print $2}')
+
+    diff_dma32=$((current_dma32 - last_dma32))
+    diff_normal=$((current_normal - last_normal))
+    diff_movable=$((current_movable - last_movable))
+    diff_nosplit=$((current_nosplit - last_nosplit))
+    diff_nomerge=$((current_nomerge - last_nomerge))
+
+    diff_all=$((diff_dma32 + diff_normal + diff_movable + diff_nosplit + diff_nomerge))
+    
+    if [ $diff_all -gt $THRESHOLD ] ; then
+        if [ $last_dma32 -gt 0 ] || [ $last_normal -gt 0 ] || [ $last_movable -gt 0 ] || [ $last_nosplit -gt 0 ] || [ $last_nomerge -gt 0 ] ; then
+
+            sync
+
+            setprop perf.drop_caches_hcn 3
+        
+            setprop perf.compact_memory 1
+
+            count=$((count + 1))
+            setprop perf.count $count
+        fi
+    fi
+
+    last_dma32=$current_dma32
+    last_normal=$current_normal
+    last_movable=$current_movable
+    last_nosplit=$current_nosplit
+    last_nomerge=$current_nomerge
+
+    sleep $INTERVAL
+done
