@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+    <feature name="com.google.android.feature.KIDS_HOME_EXPERIENCE" />
+	<feature name="com.google.android.feature.FEATURE_DEVICE_ADMIN" /> 
+    <feature name="com.google.android.feature.KIDS_HOME_EXPERIENCE_DIRECT" />
+</config>
