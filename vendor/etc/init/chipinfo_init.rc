@@ -1,0 +1,9 @@
+on early-init
+    exec_background - system system -- /vendor/bin/chipinfo
+    wait_for_prop ro.vendor.soc.model_ready 1
+    setprop ro.soc.hcn ${ro.vendor.soc.model}
+
+on post-fs-data
+    wait_for_prop ro.vendor.soc.model_ready 1
+    setprop ro.soc.model ${ro.vendor.soc.model}
+    setprop ro.soc.manufacturer ${ro.vendor.soc.manufacturer}
