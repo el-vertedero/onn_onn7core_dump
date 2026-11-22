@@ -1,0 +1,14 @@
+# sys_mssi_mid7030_mx_64-user 16 BP2A.250605.031.A3 mp1V1130 dev-keys
+- manufacturer: onn
+- platform: mt6768
+- codename: onn7core
+- flavor: sys_mssi_mid7030_mx_64-user
+- release: 16
+- id: BP2A.250605.031.A3
+- incremental: 20260623
+- tags: release-keys
+- fingerprint: onn/36020962/onn7core:16/BP2A.250605.031.A3/20260623:user/release-keys
+- is_ab: true
+- brand: onn
+- branch: sys_mssi_mid7030_mx_64-user-16-BP2A.250605.031.A3-mp1V1130-dev-keys
+- repo: onn_onn7core_dump
